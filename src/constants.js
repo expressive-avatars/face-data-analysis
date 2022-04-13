@@ -9,3 +9,6 @@ export const hallwayBlendShapeNames = Object.keys(face_data["2731"]["A"]["hallwa
 export const filteredBlendShapeNames = iosBlendShapeNames
   .filter((name) => hallwayBlendShapeNames.includes(name))
   .filter((name) => !name.startsWith("eyeLook"))
+
+export const particpantIds = Object.keys(face_data)
+export const participantAvatars = Object.fromEntries(particpantIds.map((id) => [id, face_data[id]["A"]["avatar"]]))

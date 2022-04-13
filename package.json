@@ -8,6 +8,10 @@
     "dev": "vite"
   },
   "devDependencies": {
+    "@rollup/plugin-dsv": "^2.0.3",
     "vite": "^2.9.2"
+  },
+  "dependencies": {
+    "plotly.js-dist": "^2.11.1"
   }
 }

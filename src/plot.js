@@ -4,7 +4,7 @@ import qualtrics_data from "../data/qualtrics_data.json"
 
 const root = document.createElement("div")
 root.style.width = "800px"
-root.style.height = "500px"
+root.style.height = "1000px"
 document.body.appendChild(root)
 
 const trials = [
@@ -39,14 +39,17 @@ const data = trials.map(({ name, n }) => {
 
   for (let expression of expressions) {
     const ratings = getExpressionRatings(expression, n)
-    y.push(...ratings)
-    x.push(...ratings.map(() => expression))
+    x.push(...ratings)
+    y.push(...ratings.map(() => expression))
   }
 
   const trace = {
     x,
     y,
     name,
+    orientation: "h",
+    xaxis: "y",
+    yaxis: "x",
     type: "box",
   }
   return trace
@@ -54,9 +57,14 @@ const data = trials.map(({ name, n }) => {
 
 const layout = {
   showlegend: true,
-  // yaxis: {
-  //   automargin: true,
-  // },
+  yaxis: {
+    title: "Rating",
+    ticklabelstep: 1,
+    automargin: true,
+  },
+  xaxis: {
+    title: "Expression",
+  },
   boxmode: "group",
 }
 

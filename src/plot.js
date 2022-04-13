@@ -7,6 +7,21 @@ root.style.width = "800px"
 root.style.height = "500px"
 document.body.appendChild(root)
 
+const trials = [
+  {
+    name: "Mesh (iOS)",
+    n: 2,
+  },
+  {
+    name: "Avatar (iOS)",
+    n: 3,
+  },
+  {
+    name: "Avatar (webcam)",
+    n: 1,
+  },
+]
+
 /**
  *
  * @param {string} expression A-G
@@ -16,23 +31,12 @@ function getExpressionRatings(expression, trial) {
   return Object.values(qualtrics_data).map((row) => row[`Expression ${expression}_${trial}`])
 }
 
-const data = [
-  {
-    x: getExpressionRatings("A", 1),
-    name: "Avatar (webcam)",
-    type: "box",
-  },
-  {
-    x: getExpressionRatings("A", 3),
-    name: "Avatar (iOS)",
-    type: "box",
-  },
-  {
-    x: getExpressionRatings("A", 2),
-    name: "Mesh (iOS)",
-    type: "box",
-  },
-]
+const data = trials.map(({ name, n }) => ({
+  x: getExpressionRatings("A", n),
+  name,
+  type: "box",
+  boxpoints: false,
+}))
 
 Plotly.newPlot(root, data, {
   showlegend: false,

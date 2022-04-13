@@ -41,27 +41,52 @@ function getExpressionMAE(expression) {
   return getMeanAbsoluteError(iosBlendShapes, hallwayBlendShapes)
 }
 
+function getExpressionErrors(expression) {
+  let errors = []
+
+  for (let id in face_data) {
+    const captures = face_data[id]
+    for (let name of sharedBlendShapes) {
+      const error = captures[expression]["iosBlendShapes"][name] - captures[expression]["hallwayBlendShapes"][name]
+      errors.push(error)
+      // errorDict[name] = captures['iosBlendShapes'][name] - captures['hallwayBlendShapes'][name]
+    }
+  }
+  return errors
+}
+
 const root = document.createElement("div")
 root.style.width = "1000px"
 root.style.height = "500px"
 document.body.appendChild(root)
 
-const data = [
-  {
-    x: expressions,
-    y: expressions.map((e) => getExpressionMAE(e)),
-    type: "bar",
-  },
-]
+// const data = [
+//   {
+//     x: ["A", "B"],
+//     y: [
+//       [1, 2],
+//       [3, 4],
+//     ],
+//     type: "box",
+//   },
+// ]
+
+const data = expressions
+  .map((exp) => ({
+    x: getExpressionErrors(exp),
+    type: "box",
+    name: exp,
+  }))
+  .reverse()
 
 const layout = {
   showlegend: false,
   yaxis: {
     automargin: true,
-    title: "MAE (filtered blend shapes)",
+    title: "Expression",
   },
   xaxis: {
-    title: "Expression",
+    title: "Error (iOS - Hallway)",
     automargin: true,
   },
 }

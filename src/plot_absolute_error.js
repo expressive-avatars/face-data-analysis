@@ -41,18 +41,21 @@ function getExpressionMAE(expression) {
   return getMeanAbsoluteError(iosBlendShapes, hallwayBlendShapes)
 }
 
-function getExpressionErrors(expression) {
-  let errors = []
+function getExpressionMAEs(expression) {
+  let maes = []
 
   for (let id in face_data) {
     const captures = face_data[id]
+    let totalAbsError = 0
     for (let name of sharedBlendShapes) {
       const error = captures[expression]["iosBlendShapes"][name] - captures[expression]["hallwayBlendShapes"][name]
-      errors.push(error)
+      // errors.push(error)
+      totalAbsError += Math.abs(error)
       // errorDict[name] = captures['iosBlendShapes'][name] - captures['hallwayBlendShapes'][name]
     }
+    maes.push(totalAbsError / sharedBlendShapes.length)
   }
-  return errors
+  return maes
 }
 
 const root = document.createElement("div")
@@ -73,7 +76,7 @@ document.body.appendChild(root)
 
 const data = expressions
   .map((exp) => ({
-    x: getExpressionErrors(exp),
+    x: getExpressionMAEs(exp),
     type: "box",
     name: exp,
   }))

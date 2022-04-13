@@ -3,8 +3,8 @@ import face_data from "../data/face_data.json"
 import qualtrics_data from "../data/qualtrics_data.json"
 
 const root = document.createElement("div")
-root.style.width = "800px"
-root.style.height = "1000px"
+root.style.width = "1000px"
+root.style.height = "500px"
 document.body.appendChild(root)
 
 const trials = [
@@ -39,17 +39,14 @@ const data = trials.map(({ name, n }) => {
 
   for (let expression of expressions) {
     const ratings = getExpressionRatings(expression, n)
-    x.push(...ratings)
-    y.push(...ratings.map(() => expression))
+    x.push(...ratings.map(() => expression))
+    y.push(...ratings)
   }
 
   const trace = {
     x,
     y,
     name,
-    orientation: "h",
-    xaxis: "y",
-    yaxis: "x",
     type: "box",
   }
   return trace

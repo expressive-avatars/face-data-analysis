@@ -14,13 +14,19 @@ const rating_labels = ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Str
 function remapRatings(row) {
   for (const key in row) {
     if (key.startsWith("Expression")) {
-      row[key] = rating_labels.indexOf(row[key]) + 1
+      const idx = rating_labels.indexOf(row[key])
+      if (idx < 0) {
+        console.warn(`invalid rating for "${key}" in row`, row)
+        row[key] = null
+      } else {
+        row[key] = idx + 1
+      }
     }
   }
 }
 
 let responses = csv.slice(2).filter((row) => row["Q33"].length > 0 && row["Q33"] !== "301007")
-responses.map((row) => remapRatings(row))
+responses.forEach((row) => remapRatings(row))
 const responesObj = Object.fromEntries(responses.map((row) => [row["Q33"], row]))
 
 console.log(responesObj)

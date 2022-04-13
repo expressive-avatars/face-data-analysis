@@ -22,6 +22,8 @@ const trials = [
   },
 ]
 
+const expressions = ["A", "B", "C", "D", "E", "F", "G"]
+
 /**
  *
  * @param {string} expression A-G
@@ -31,16 +33,32 @@ function getExpressionRatings(expression, trial) {
   return Object.values(qualtrics_data).map((row) => row[`Expression ${expression}_${trial}`])
 }
 
-const data = trials.map(({ name, n }) => ({
-  x: getExpressionRatings("A", n),
-  name,
-  type: "box",
-  boxpoints: false,
-}))
+const data = trials.map(({ name, n }) => {
+  let x = []
+  let y = []
 
-Plotly.newPlot(root, data, {
-  showlegend: false,
-  yaxis: {
-    automargin: true,
-  },
+  for (let expression of expressions) {
+    const ratings = getExpressionRatings(expression, n)
+    y.push(...ratings)
+    x.push(...ratings.map(() => expression))
+  }
+
+  const trace = {
+    x,
+    y,
+    name,
+    type: "box",
+  }
+  return trace
 })
+
+const layout = {
+  showlegend: true,
+  // yaxis: {
+  //   automargin: true,
+  // },
+  boxmode: "group",
+}
+
+console.log(data)
+Plotly.newPlot(root, data, layout)

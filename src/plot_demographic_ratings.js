@@ -52,22 +52,22 @@ const race_counts_obj = Object.fromEntries(arr_race.map((race, i) => [race, race
 const gender_counts = arr_gender.map((gender) => Object.values(qualtrics_data).filter((row) => row.Gender === gender).length)
 const gender_counts_obj = Object.fromEntries(arr_gender.map((gender, i) => [gender, gender_counts[i]]))
 
-const gender_means_ios = arr_gender.map((gender) =>
-  getMean(
+const gender_means_ios = arr_gender
+  .map((gender) =>
     Object.values(qualtrics_data)
       .filter((row) => row.Gender === gender)
-      .map((row) => getMean(getRowRatings(row, 3)))
+      .map((row) => [gender, getMean(getRowRatings(row, 3))])
   )
-)
-const gender_means_webcam = arr_gender.map((gender) =>
-  getMean(
+  .flat()
+const gender_means_webcam = arr_gender
+  .map((gender) =>
     Object.values(qualtrics_data)
       .filter((row) => row.Gender === gender)
-      .map((row) => getMean(getRowRatings(row, 1)))
+      .map((row) => [gender, getMean(getRowRatings(row, 1))])
   )
-)
+  .flat()
 
-console.log({ race_means_ios, race_means_webcam, race_counts_obj, gender_counts_obj })
+console.log({ gender_means_ios, gender_means_webcam })
 
 const layout = {
   showlegend: true,
@@ -81,19 +81,20 @@ const layout = {
   xaxis: {
     title: "Gender",
   },
+  boxmode: "group",
 }
 
 const trace1 = {
-  x: arr_gender,
-  y: gender_means_ios,
-  type: "bar",
+  x: gender_means_ios.map((x) => x[0]),
+  y: gender_means_ios.map((x) => x[1]),
+  type: "box",
   name: "iOS avatar",
 }
 
 const trace2 = {
-  x: arr_gender,
-  y: gender_means_webcam,
-  type: "bar",
+  x: gender_means_webcam.map((x) => x[0]),
+  y: gender_means_webcam.map((x) => x[1]),
+  type: "box",
   name: "Webcam avatar",
 }
 

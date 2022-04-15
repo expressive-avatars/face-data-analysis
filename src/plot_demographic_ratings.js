@@ -1,6 +1,7 @@
 import Plotly from "plotly.js-dist"
 import face_data from "../data/face_data.json"
 import qualtrics_data from "../data/qualtrics_data.json"
+import { trials } from "./constants"
 import { getMean } from "./stats"
 
 const root = document.createElement("div")
@@ -79,7 +80,7 @@ const layout = {
     range: [1, 5],
   },
   xaxis: {
-    title: "Gender",
+    title: "Tracking Output",
   },
   boxmode: "group",
 }
@@ -98,7 +99,26 @@ const trace2 = {
   name: "Webcam avatar",
 }
 
-const data = [trace1, trace2]
+const data = arr_gender.map((gender) => {
+  let tuples = []
+  const rows = Object.values(qualtrics_data).filter((row) => row.Gender === gender)
+
+  rows.forEach((row) => {
+    trials.forEach((trial) => {
+      const tuple = [trial.name, getMean(getRowRatings(row, trial.n))]
+      tuples.push(tuple)
+    })
+  })
+
+  const trace = {
+    x: tuples.map((t) => t[0]),
+    y: tuples.map((t) => t[1]),
+    type: "box",
+    name: gender,
+  }
+
+  return trace
+})
 
 console.log(data)
 
